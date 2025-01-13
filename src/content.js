@@ -86,19 +86,24 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 
 // check if the element right clicked has a background-image.
 function isBackgroundImage() {
-  // console.log('Style: ' + imageEl.style.backgroundImage);
+  console.log('Tag: ' + imageEl.tagName);
   if (imageEl && imageEl.style.backgroundImage) {
     // confirm('Selected element: ' + imageEl.tagName + ' has background-image property: ' + imageEl.style.backgroundImage);
     confirm('Selected background-image: ' + imageEl.style.backgroundImage + '. Proceed?');
     return true;
   }
+  // IMG detection code. imgs shouldn't cause contextmenus to appear atm so commenting this out for now
+  // if (imageEl && imageEl.tagName === 'IMG') {
+  //   alert('Selected element is an image. Please select an element with background-image property.');
+  //   return false;
+  // }
+  alert('No background-image found. Please select an element with background-image property.');
   return false;
 }
 
 // gets image using file input
 function getInputImage() {
   if (!isBackgroundImage()) {
-    alert('Invalid element - This element has no background-image property!');
     return;
   }
   const fileInput = document.createElement("input");
@@ -124,7 +129,6 @@ function readInputImage(file) {
 // gets the input url from user
 function getInputURL() {
   if (!isBackgroundImage()) {
-    alert('Invalid element - This element has no background-image property!');
     return;
   }
   const URL = prompt('Enter the Image URL:');
@@ -137,9 +141,6 @@ function getInputURL() {
 
 // Store replaced images
 const replacedImages = new Map();
-
-// Example replacement
-// replacedImages.set(`url("/images/items/trade/discard.png")`, `url("https://i0.wp.com/picjumbo.com/wp-content/uploads/silhouette-of-a-guy-with-a-cap-at-red-sky-sunset-free-image.jpeg?h=800&quality=80")`);
 
 // Open IndexedDB database
 let db;

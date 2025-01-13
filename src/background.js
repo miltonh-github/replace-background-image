@@ -3,25 +3,20 @@
 function createContextMenu() {
 
   chrome.contextMenus.create({
-    id: "replaceimage",
-    title: "Background Image Replacer",
+    id: "replaceImageLocal",
+    title: "Replace with Local File",
+    contexts: ["page"],
+  });
+  
+  chrome.contextMenus.create({
+    id: "replaceImageUrl",
+    title: "Replace with image URL",
+    contexts: ["page"],
   });
 
   chrome.contextMenus.create({
     id: "saveLoad",
     title: "Save/Load",
-  });
-
-  chrome.contextMenus.create({
-    id: "replaceImageLocal",
-    title: "Local File",
-    parentId: "replaceimage",
-  });
-  
-  chrome.contextMenus.create({
-    id: "replaceImageUrl",
-    title: "URL",
-    parentId: "replaceimage",
   });
 
   chrome.contextMenus.create({

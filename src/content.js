@@ -84,8 +84,23 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   return true;
 });
 
+// check if the element right clicked has a background-image.
+function isBackgroundImage() {
+  // console.log('Style: ' + imageEl.style.backgroundImage);
+  if (imageEl && imageEl.style.backgroundImage) {
+    // confirm('Selected element: ' + imageEl.tagName + ' has background-image property: ' + imageEl.style.backgroundImage);
+    confirm('Selected background-image: ' + imageEl.style.backgroundImage + '. Proceed?');
+    return true;
+  }
+  return false;
+}
+
 // gets image using file input
 function getInputImage() {
+  if (!isBackgroundImage()) {
+    alert('Invalid element - This element has no background-image property!');
+    return;
+  }
   const fileInput = document.createElement("input");
   fileInput.type = "file";
   fileInput.accept = "image/*";
@@ -108,6 +123,10 @@ function readInputImage(file) {
 
 // gets the input url from user
 function getInputURL() {
+  if (!isBackgroundImage()) {
+    alert('Invalid element - This element has no background-image property!');
+    return;
+  }
   const URL = prompt('Enter the Image URL:');
   if(!isValidUrl(URL)) {
     alert('Provided URL is Invalid');

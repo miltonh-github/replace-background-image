@@ -1,5 +1,5 @@
 {
-  "manifest_version": 1,
+  "manifest_version": 3,
   "name": "Background Image Replacer",
   "version": "1.0.0",
   "description": "Replaces the background-image css property of the selected element with the image of your choice.",
@@ -19,6 +19,6 @@
       "js": ["src/content.js"]
     }
   ],
-  "homepage_url": "https://github.com/miltonh-github",
+  "homepage_url": "https://github.com/miltonh-github/replace-background-image",
   "permissions": ["contextMenus", "storage"]
 }

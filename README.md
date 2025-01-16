@@ -29,3 +29,5 @@ WIP
 
 # Special Thanks
 This is a modified version of the <a href="https://github.com/aswinkumar863/replace-image-chrome">Replace Image Locally extension by aswinkumar868.</a> The original extension is capable of changing the src of img elements.
+
+<a href="https://www.flaticon.com/free-icons/picture" title="picture icons">Picture icons created by Pixel perfect - Flaticon</a>

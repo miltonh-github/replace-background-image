@@ -18,88 +18,17 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
       getInputURL();
       break;
     case "replaceImageReset":
-      // Delete everything in the replacedImages IndexedDB
-      const transaction = db.transaction(['replacedImages'], 'readwrite');
-      const objectStore = transaction.objectStore('replacedImages');
-      const request = objectStore.clear();
-
-      request.onsuccess = function() {
-        alert("All replaced images successfully reset. Reloading...");
-        // Clear replacedImages Map
-        replacedImages.clear();
-        // // Reset all images to their original state
-        // const allImages = document.querySelectorAll('*');
-        // allImages.forEach(img => {
-        //   img.style.backgroundImage = '';
-        // });
-
-        // Refresh the page
-        location.reload();
-      };
+      resetReplacedImages();
       break;
     case "loadLocalJson":
-        // Load a JSON file with image replacements
-        const fileInput = document.createElement("input");
-        fileInput.type = "file";
-        fileInput.accept = "application/json";
-
-        fileInput.addEventListener("change", function (e) {
-          const file = this.files[0];
-          const reader = new FileReader();
-          reader.readAsText(file);
-          reader.onload = function () {
-        try {
-          const json = JSON.parse(reader.result);
-          for (const [oldSrc, newSrc] of Object.entries(json)) {
-            replacedImages.set(oldSrc, newSrc);
-            saveReplacedImage(oldSrc, newSrc);
-          }
-          applyReplacedImagesToAll();
-          alert("Image replacements loaded from JSON.");
-        } catch (error) {
-          console.error("Error parsing JSON file:", error);
-          alert("Failed to load JSON file.");
-        }
-          };
-        }, false);
-
-        fileInput.click();
-        break;
+      loadLocalJson();
+      break;
     case "saveLocalJson":
-        // Save a JSON file with image replacements
-        const json = {};
-        replacedImages.forEach((newSrc, oldSrc) => {
-          json[oldSrc] = newSrc;
-        });
-        const jsonStr = JSON.stringify(json, null, 2);
-        const blob = new Blob([jsonStr], { type: "application/json" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "image_replacements.json";
-        a.click();
-        URL.revokeObjectURL(url);
-        break;
+      saveLocalJson();
+      break;
   }
   return true;
 });
-
-// check if the element right clicked has a background-image.
-function isBackgroundImage() {
-  console.log('Tag: ' + imageEl.tagName);
-  if (imageEl && imageEl.style.backgroundImage) {
-    // confirm('Selected element: ' + imageEl.tagName + ' has background-image property: ' + imageEl.style.backgroundImage);
-    confirm('Selected background-image: ' + imageEl.style.backgroundImage + '. Proceed?');
-    return true;
-  }
-  // IMG detection code. imgs shouldn't cause contextmenus to appear atm so commenting this out for now
-  // if (imageEl && imageEl.tagName === 'IMG') {
-  //   alert('Selected element is an image. Please select an element with background-image property.');
-  //   return false;
-  // }
-  alert('No background-image found. Please select an element with background-image property.');
-  return false;
-}
 
 // gets image using file input
 function getInputImage() {
@@ -139,6 +68,98 @@ function getInputURL() {
   replaceImage(URL);
 }
 
+// Reset all replaced images
+function resetReplacedImages() {
+  // Delete everything in the replacedImages IndexedDB
+  const transaction = db.transaction(['replacedImages'], 'readwrite');
+  const objectStore = transaction.objectStore('replacedImages');
+  const request = objectStore.clear();
+
+  request.onsuccess = function() {
+    alert("All replaced images successfully reset. Reloading...");
+    // Clear replacedImages Map
+    replacedImages.clear();
+    // // Reset all images to their original state
+    // const allImages = document.querySelectorAll('*');
+    // allImages.forEach(img => {
+    //   img.style.backgroundImage = '';
+    // });
+
+    // Refresh the page
+    location.reload();
+  };
+}
+
+// checks whether the URL is valid
+function isValidUrl(string) {
+  try { return Boolean(new URL(string)); }
+  catch (e) { return false; }
+}
+
+// check if the element right clicked has a background-image.
+function isBackgroundImage() {
+  console.log('Tag: ' + imageEl.tagName);
+  if (imageEl && imageEl.style.backgroundImage) {
+    // confirm('Selected element: ' + imageEl.tagName + ' has background-image property: ' + imageEl.style.backgroundImage);
+    confirm('Selected element has background-image: ' + imageEl.style.backgroundImage + '. Proceed?');
+    return true;
+  }
+  // IMG detection code. imgs shouldn't cause contextmenus to appear atm so commenting this out for now
+  // if (imageEl && imageEl.tagName === 'IMG') {
+  //   alert('Selected element is an image. Please select an element with background-image property.');
+  //   return false;
+  // }
+  alert('No background-image found. Please select an element with background-image property.');
+  return false;
+}
+
+// # Save/load JSON related code
+// Load a JSON file with image replacements
+function loadLocalJson() {
+  const fileInput = document.createElement("input");
+  fileInput.type = "file";
+  fileInput.accept = "application/json";
+
+  fileInput.addEventListener("change", function (e) {
+    const file = this.files[0];
+    const reader = new FileReader();
+    reader.readAsText(file);
+    reader.onload = function () {
+  try {
+    const json = JSON.parse(reader.result);
+    for (const [oldSrc, newSrc] of Object.entries(json)) {
+      replacedImages.set(oldSrc, newSrc);
+      saveReplacedImage(oldSrc, newSrc);
+    }
+    applyReplacedImagesToAll();
+    alert("Image replacements loaded from JSON.");
+  } catch (error) {
+    console.error("Error parsing JSON file:", error);
+    alert("Failed to load JSON file.");
+  }
+    };
+  }, false);
+
+  fileInput.click();
+}
+
+// Save a JSON file with image replacements
+function saveLocalJson() {
+  const json = {};
+  replacedImages.forEach((newSrc, oldSrc) => {
+    json[oldSrc] = newSrc;
+  });
+  const jsonStr = JSON.stringify(json, null, 2);
+  const blob = new Blob([jsonStr], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "image_replacements.json";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// # DB and image replacement related code
 // Store replaced images
 const replacedImages = new Map();
 
@@ -265,9 +286,3 @@ console.log("Image observer started");
 
 // Open the IndexedDB database on startup
 openDatabase();
-
-// checks whether the URL is valid
-function isValidUrl(string) {
-  try { return Boolean(new URL(string)); }
-  catch (e) { return false; }
-}

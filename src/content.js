@@ -70,23 +70,24 @@ function getInputURL() {
 
 // Reset all replaced images
 function resetReplacedImages() {
+  // Reverse all images to their original state
+  reverseReplacedImages();
+  console.log('resetting replaced images');
+  // Apply the reversed images to all elements
+  applyReplacedImagesToAll();
+
   // Delete everything in the replacedImages IndexedDB
   const transaction = db.transaction(['replacedImages'], 'readwrite');
   const objectStore = transaction.objectStore('replacedImages');
   const request = objectStore.clear();
 
   request.onsuccess = function() {
-    alert("All replaced images successfully reset. Reloading...");
-    // Clear replacedImages Map
+    alert("All replaced images successfully reset.");
     replacedImages.clear();
-    // // Reset all images to their original state
-    // const allImages = document.querySelectorAll('*');
-    // allImages.forEach(img => {
-    //   img.style.backgroundImage = '';
-    // });
+  };
 
-    // Refresh the page
-    location.reload();
+  request.onerror = function(event) {
+    console.error('Error clearing replaced images from IndexedDB:', event.target.errorCode);
   };
 }
 
@@ -248,6 +249,21 @@ function applyReplacedImages(element) {
   });
 }
 
+// Reverse applied replaced images
+function reverseReplacedImages() {
+  // Set newSrc to oldSrc and vice versa, then replace
+  const reversedImages = new Map();
+  replacedImages.forEach((newSrc, oldSrc) => {
+    reversedImages.set(oldSrc, newSrc);
+  });
+  // console.log('1: ' + replacedImages.keys().next().value);
+
+  reversedImages.forEach((oldSrc, newSrc) => {
+    replacedImages.set(oldSrc, newSrc);
+  });
+  // console.log('2: ' + replacedImages.keys().next().value);
+}
+
 // Apply replaced images to all existing elements
 function applyReplacedImagesToAll() {
   const allElements = document.querySelectorAll('*');
@@ -265,17 +281,17 @@ function replaceImage(source) {
   const oldBackgroundImage = imageEl.style.backgroundImage;
 
   // Replace the clicked image
-  imageEl.style.backgroundImage = `url(${source})`;
+  imageEl.style.backgroundImage = `url("${source}")`;
 
   // Store the replacement
-  replacedImages.set(oldBackgroundImage, `url(${source})`);
-  saveReplacedImage(oldBackgroundImage, `url(${source})`);
+  replacedImages.set(oldBackgroundImage, `url("${source}")`);
+  saveReplacedImage(oldBackgroundImage, `url("${source}")`);
 
   // Replace any other images with the same backgroundImage
   const allImages = document.querySelectorAll('*');
   allImages.forEach(img => {
     if (img.style.backgroundImage === oldBackgroundImage) {
-      img.style.backgroundImage = `url(${source})`;
+      img.style.backgroundImage = `url("${source}")`;
     }
   });
 }

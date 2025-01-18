@@ -102,15 +102,17 @@ function isBackgroundImage() {
   console.log('Tag: ' + imageEl.tagName);
   if (imageEl && imageEl.style.backgroundImage) {
     // confirm('Selected element: ' + imageEl.tagName + ' has background-image property: ' + imageEl.style.backgroundImage);
-    confirm('Selected element has background-image: ' + imageEl.style.backgroundImage + '. Proceed?');
-    return true;
+    if (confirm('Selected element has background-image: ' + imageEl.style.backgroundImage + '. Proceed?')) {
+      return true;
+    }
+    return false;
   }
   // IMG detection code. imgs shouldn't cause contextmenus to appear atm so commenting this out for now
   // if (imageEl && imageEl.tagName === 'IMG') {
   //   alert('Selected element is an image. Please select an element with background-image property.');
   //   return false;
   // }
-  alert('No background-image found. Please select an element with background-image property.');
+  alert('No background-image found. Please select an element with the background-image property.');
   return false;
 }
 

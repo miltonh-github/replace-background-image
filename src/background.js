@@ -25,14 +25,14 @@ function createContextMenu() {
   });
 
   chrome.contextMenus.create({
-    id: "loadLocalJson",
-    title: "Load Local JSON",
+    id: "saveLocalJson",
+    title: "Save Local JSON",
     parentId: "saveLoad",
   });
 
   chrome.contextMenus.create({
-    id: "saveLocalJson",
-    title: "Save Local JSON",
+    id: "loadLocalJson",
+    title: "Load Local JSON",
     parentId: "saveLoad",
   });
 

@@ -5,10 +5,14 @@ Chrome extension to replace the background-image properties of elements on a web
 Changes are persistent even after refresh or the tab is closed.
 
 # Table of Contents
-1. [Instructions](#instructions)
-2. [Features](#features)
-3. [FAQ](#faq)
-4. [Special Thanks](#special-thanks)
+1. [Installation](#installation)
+2. [Instructions](#instructions)
+3. [Features](#features)
+4. [FAQ](#faq)
+5. [Special Thanks](#special-thanks)
+
+# Installation
+WIP
 
 # Instructions
 ![Example Image](images/example_image.jpg)

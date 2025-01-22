@@ -99,21 +99,20 @@ function isValidUrl(string) {
 
 // check if the element right clicked has a background-image.
 function isBackgroundImage() {
-  console.log('Tag: ' + imageEl.tagName);
-  if (imageEl && imageEl.style.backgroundImage) {
-    // confirm('Selected element: ' + imageEl.tagName + ' has background-image property: ' + imageEl.style.backgroundImage);
-    if (confirm('Selected element has background-image: ' + imageEl.style.backgroundImage + '. Proceed?')) {
-      return true;
+  try {
+    if (imageEl && imageEl.style.backgroundImage) {
+      if (confirm('Selected element has background-image: ' + imageEl.style.backgroundImage + '. Proceed?')) {
+        return true;
+      }
+      return false;
     }
+    alert('No background-image found. Please select an element with the background-image property.\nThe type of element selected was: ' + imageEl.tagName);
+    return false;
+  } catch (error) {
+    console.error('Error checking background image:', error);
+    alert('Error: an element could not be selected. Please try again.\n(Note: this extension cannot target elements like <html>, <head>, <body>, etc.)');
     return false;
   }
-  // IMG detection code. imgs shouldn't cause contextmenus to appear atm so commenting this out for now
-  // if (imageEl && imageEl.tagName === 'IMG') {
-  //   alert('Selected element is an image. Please select an element with background-image property.');
-  //   return false;
-  // }
-  alert('No background-image found. Please select an element with the background-image property.');
-  return false;
 }
 
 // # Save/load JSON related code

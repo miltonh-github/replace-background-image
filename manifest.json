@@ -13,12 +13,7 @@
   "background": {
     "service_worker": "src/background.js"
   },
-  "content_scripts": [
-    {
-      "matches": ["<all_urls>"],
-      "js": ["src/content.js"]
-    }
-  ],
+  
   "homepage_url": "https://github.com/miltonh-github/replace-background-image",
-  "permissions": ["contextMenus"]
+  "permissions": ["contextMenus", "activeTab", "scripting"]
 }

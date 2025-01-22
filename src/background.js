@@ -1,13 +1,10 @@
-"use strict";
-
 function createContextMenu() {
-
   chrome.contextMenus.create({
     id: "replaceImageLocal",
     title: "Replace with Local File",
     contexts: ["all"],
   });
-  
+
   chrome.contextMenus.create({
     id: "replaceImageUrl",
     title: "Replace with image URL",
@@ -40,12 +37,16 @@ function createContextMenu() {
     contexts: ["all"],
   });
 
-
-
   chrome.contextMenus.onClicked.addListener(function (info, tab) {
-    chrome.tabs.sendMessage(tab.id, { message: info.menuItemId })
-      .then(() => {})
-      .catch(() => {});
+    if (tab.id) {
+      chrome.scripting.executeScript({
+        target: { tabId: tab.id },
+        files: ["src/content.js"]
+      }).then(() => {
+        chrome.tabs.sendMessage(tab.id, { message: info.menuItemId });
+      }).catch(err => console.error(err));
+    }
   });
 }
-createContextMenu()
+
+createContextMenu();

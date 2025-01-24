@@ -12,7 +12,7 @@ Changes are persistent even after refresh or the tab is closed.
 5. [Special Thanks](#special-thanks)
 
 # Installation
-WIP
+[Install from the Chrome Web Store](https://chromewebstore.google.com/detail/background-image-replacer/moolmelghndnoegeideblakkdflfamed?authuser=6&hl=en)
 
 # Instructions
 ![Example Image](images/example_image.jpg)

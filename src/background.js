@@ -38,14 +38,9 @@ function createContextMenu() {
   });
 
   chrome.contextMenus.onClicked.addListener(function (info, tab) {
-    if (tab.id) {
-      chrome.scripting.executeScript({
-        target: { tabId: tab.id },
-        files: ["src/content.js"]
-      }).then(() => {
-        chrome.tabs.sendMessage(tab.id, { message: info.menuItemId });
-      }).catch(err => console.error(err));
-    }
+    chrome.tabs.sendMessage(tab.id, { message: info.menuItemId })
+      .then(() => {})
+      .catch(() => {});
   });
 }
 
